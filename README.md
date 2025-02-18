@@ -1,72 +1,61 @@
-## Foundry
+# NFT Liquidity Lock Platform
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Overview
+A decentralized platform for locking NFT liquidity with customizable time-based restrictions. The platform allows users to lock their NFTs in smart contracts with two different locking mechanisms: Basic (immediate withdrawal) and Normal (time-locked).
 
-Foundry consists of:
+## Key Features
+- Two types of liquidity locks:
+  - Basic Lock: Immediate withdrawal capability
+  - Normal Lock: Time-restricted withdrawal
+- Clone Factory pattern for deploying lock contracts
+- Fee-based lock creation system
+- Upgradeable contract architecture
+- Owner-based access control
+- Safe NFT handling with ERC721 standards
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Contract Architecture
+- `LiquidityLockFactory`: Main factory contract for creating lock instances
+- `BaseLiquidity`: Abstract base contract with core locking logic
+- `BasicLiquidityLock`: Implementation for immediate withdrawal locks
+- `NormalLiquidityLock`: Implementation for time-restricted locks
+- `ILiquidity`: Interface defining core locking functionality
 
-## Documentation
+## How it Works
+1. Users interact with the `LiquidityLockFactory` to create new locks
+2. Pay creation fee in USDC (configurable)
+3. Choose between Basic and Normal lock types
+4. NFTs are held in individual clone contracts
+5. Owners can withdraw based on lock type rules:
+   - Basic: Withdraw anytime
+   - Normal: Must wait until unlock time
 
-https://book.getfoundry.sh/
+## Technical Details
+- Solidity Version: 0.8.24
+- Uses OpenZeppelin contracts
+- Implements Clone Factory pattern
+- Uses USDC for fee payments
+- Supports ERC721 standard NFTs
+
+## Fee Structure
+- Basic Lock: 20 USDC
+- Normal Lock: 50 USDC
+- Configurable by fee admin
 
 ## Usage
+To create a lock:
+1. Approve NFT transfer to factory
+2. Pay required USDC fee
+3. Call `createLock` with:
+   - NFT contract address
+   - Lock type (BASIC/NORMAL)
+   - Token ID
+   - Unlock time (for NORMAL locks)
 
-### Build
+## Security Features
+- ReentrancyGuard implementation
+- Address validation checks
+- Protected initializers
+- Admin-controlled fee parameters
+- 100% test coverage
+- Fuzz runs verfied for important functions for 256 runs
 
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
-
-
-write end to end soldity test in foundry for LiquidityLockFactory contract especially testing createLock functionailtiy on polygon forked mainnet.Impersonate USDC whale on polygon mainnet to pay fee. Also create new liquidity first on uniswapV3 polygon mainnet forket by provding 1000 USDC  and mockDUGI token pair.Create mockDUGI token for that.Once the liqudity is created on NFT LP token will be generate.Lock this NFT token via createLock
-
-
-forge test --match-test testCreateNormalLockFuzz

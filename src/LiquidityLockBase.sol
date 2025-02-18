@@ -27,6 +27,9 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
     /// @notice Thrown when contract is already initialized
     error AlreadyInitialized();
 
+    /// @notice Thrown when address is invalid
+    error NotValidAddress();
+
     /// @notice Modifier to restrict access to the owner
     modifier onlyOwner() {
         if (msg.sender != owner) revert NotOwner();
@@ -36,6 +39,7 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
     /// @notice Initializes the lock contract
     function initialize(address _owner, uint256 _tokenId, uint256 _unlockTime) external virtual {
         if (initialized) revert AlreadyInitialized();
+        if (_owner == address(0)) revert NotValidAddress();
         owner = _owner;
         tokenId = _tokenId;
         unlockTime = _unlockTime;

@@ -8,7 +8,7 @@ fs_permissions = [{ access = "read", path = ".env"}]
 
 
 remappings = [
-   '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/'
+   '@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/',
    
   ]
 
