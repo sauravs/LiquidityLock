@@ -10,13 +10,17 @@ import "./interfaces/ILiquidity.sol";
 abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
     /// @notice Owner of the locked NFT
     /// @dev Address that can withdraw the NFT
-    address public owner;
+    address private owner;
 
     /// @notice ID of the locked NFT
-    uint256 public tokenId;
+    uint256 private tokenId;
 
     /// @notice Timestamp when NFT unlocks
-    uint256 public unlockTime;
+    uint256 private unlockTime;
+
+    /// @notice Timestamp when NFT was locked
+
+    uint256 private startTime;
 
     /// @notice Initialization status
     bool private initialized;
@@ -43,6 +47,7 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
         owner = _owner;
         tokenId = _tokenId;
         unlockTime = _unlockTime;
+        startTime = block.timestamp;
         initialized = true;
     }
 
@@ -59,6 +64,11 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
     /// @notice Returns the unlock time of the locked NFT
     function getUnlockTime() external view returns (uint256) {
         return unlockTime;
+    }
+
+    /// @notice Returns the start time of the locked NFT
+    function getStartTime() external view returns (uint256) {
+        return startTime;
     }
 
     /// @notice Withdraws the locked NFT

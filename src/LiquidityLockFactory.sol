@@ -86,7 +86,6 @@ contract LiquidityLockFactory is ReentrancyGuard {
     /// @param newFee New fee amount for normal locks
     event FeeAmountNormalUpdated(uint256 indexed newFee);
 
-    
     /// @notice Error message when caller is not fee admin
     error NotFeeAdmin();
 
@@ -103,7 +102,6 @@ contract LiquidityLockFactory is ReentrancyGuard {
         if (msg.sender != feeAdmin) revert NotFeeAdmin();
         _;
     }
-
 
     /// @notice Initializes the factory with implementation contracts
 
@@ -199,15 +197,12 @@ contract LiquidityLockFactory is ReentrancyGuard {
         emit LockCreated(msg.sender, lock, lockType);
     }
 
-  
-
     /// @notice Gets all locks created by a user
     /// @param user Address of the user
     /// @return Array of LockInfo structs containing lock details
     function getUserLocks(address user) external view returns (LockInfo[] memory) {
         return userLocks[user];
     }
-
 
     /// @notice Checks if a contract exists at the given address
     /// @param _contract Address to check

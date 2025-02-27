@@ -3,23 +3,34 @@ pragma solidity 0.8.24;
 import "../LiquidityLockBase.sol";
 
 /// @title NormalLiquidity
-/// @notice Implementation of a time-locked NFT liquidity lock
-/// @dev Inherits from BaseLiquidity and adds time-based withdrawal restrictions
+/// @notice Contract for NFT liquidity locking with time lock
+/// @dev Extends BaseLiquidity with time lock functionality
 
 contract NormalLiquidity is BaseLiquidity {
-    /// @notice Error thrown when attempting to withdraw before unlock time
-    /// @param currentTime The current block timestamp
-    /// @param unlockTime The timestamp when withdrawal becomes available
+    /// @notice Thrown when token ID is invalid
+
+    error InvalidTokenId();
+
+    /// @notice Thrown when token is still locked
     error TokenStillLocked(uint256 currentTime, uint256 unlockTime);
 
-    /// @notice Allows the owner to withdraw their locked NFT after unlock time
+    /// @notice Allows the owner to withdraw their locked NFT after the unlock time
     /// @param nftContract The address of the NFT contract
-    /// @param tokenId The ID of the NFT to withdraw
-    /// @dev Reverts if called before unlockTime, only callable by owner
-    function withdraw(address nftContract, uint256 tokenId) external override onlyOwner {
-        if (block.timestamp < unlockTime) {
-            revert TokenStillLocked(block.timestamp, unlockTime);
+    /// @param _tokenId The ID of the NFT to withdraw
+    /// @dev Only callable by lock owner, transfers NFT directly to owner
+
+    function withdraw(address nftContract, uint256 _tokenId) external override onlyOwner {
+        if (nftContract == address(0)) revert NotValidAddress();
+
+        uint256 currentUnlockTime = this.getUnlockTime();
+        if (block.timestamp < currentUnlockTime) {
+            revert TokenStillLocked(block.timestamp, currentUnlockTime);
         }
-        IERC721(nftContract).safeTransferFrom(address(this), owner, tokenId);
+
+        if (_tokenId != this.getTokenId()) {
+            revert InvalidTokenId();
+        }
+
+        IERC721(nftContract).safeTransferFrom(address(this), this.getOwner(), _tokenId);
     }
 }

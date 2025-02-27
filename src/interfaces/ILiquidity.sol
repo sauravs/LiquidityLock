@@ -1,4 +1,3 @@
-
 pragma solidity 0.8.24;
 
 interface ILiquidity {
@@ -9,4 +8,5 @@ interface ILiquidity {
     function getOwner() external view returns (address);
     function getTokenId() external view returns (uint256);
     function getUnlockTime() external view returns (uint256);
+    function getStartTime() external view returns (uint256);
 }
