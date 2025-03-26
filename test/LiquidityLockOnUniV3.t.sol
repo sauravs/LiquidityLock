@@ -404,138 +404,138 @@ contract LiquidityLockForUniV3Test is Test {
         liquidityFactory.updatelockFeeAmountNormal(newFee);
     }
 
-    //  function testCreateBasicLockFuzz(
-    //     address fuzzLiquidityProvider,
-    //     uint256 fuzzTokenId,
-    //     uint256 fuzzFeeAmount
-    // ) public {
-    //     // bound and validate fuzz inputs
-    //     vm.assume(fuzzLiquidityProvider != address(0));
-    //     vm.assume(fuzzLiquidityProvider.code.length == 0);
-    //     vm.assume(fuzzLiquidityProvider != liquidityFactory.feeCollector());
-    //     vm.assume(fuzzLiquidityProvider != USDC_WHALE);
+     function testCreateBasicLockFuzz(
+        address fuzzLiquidityProvider,
+        uint256 fuzzTokenId,
+        uint256 fuzzFeeAmount
+    ) public {
+        // bound and validate fuzz inputs
+        vm.assume(fuzzLiquidityProvider != address(0));
+        vm.assume(fuzzLiquidityProvider.code.length == 0);
+        vm.assume(fuzzLiquidityProvider != liquidityFactory.feeCollector());
+        vm.assume(fuzzLiquidityProvider != USDC_WHALE);
 
-    //     fuzzTokenId = bound(fuzzTokenId, 1, 1_000_000);
-    //     fuzzFeeAmount = bound(fuzzFeeAmount, 20e6, 1_000_000e6);
+        fuzzTokenId = bound(fuzzTokenId, 1, 1_000_000);
+        fuzzFeeAmount = bound(fuzzFeeAmount, 20e6, 1_000_000e6);
 
-    //     //  provide funds with both tokens
-    //     vm.startPrank(USDC_WHALE);
-    //     IERC20(USDC).transfer(fuzzLiquidityProvider, 10_000e6);
-    //     vm.stopPrank();
+        //  provide funds with both tokens
+        vm.startPrank(USDC_WHALE);
+        IERC20(USDC).transfer(fuzzLiquidityProvider, 10_000e6);
+        vm.stopPrank();
 
-    //     // mint mock tokens to provider
-    //     mockDugi.mint(fuzzLiquidityProvider, 10_000e18);
+        // mint mock tokens to provider
+        mockDugi.mint(fuzzLiquidityProvider, 10_000e18);
 
-    //     vm.startPrank(fuzzLiquidityProvider);
+        vm.startPrank(fuzzLiquidityProvider);
 
-    //     // approve tokens
-    //     IERC20(USDC).approve(POSITION_MANAGER, type(uint256).max);
-    //     mockDugi.approve(POSITION_MANAGER, type(uint256).max);
+        // approve tokens
+        IERC20(USDC).approve(POSITION_MANAGER, type(uint256).max);
+        mockDugi.approve(POSITION_MANAGER, type(uint256).max);
 
-    //     // Create position
-    //     (uint256 actualTokenId,,,) = npm.mint(
-    //         INonfungiblePositionManager.MintParams({
-    //             token0: USDC,
-    //             token1: address(mockDugi),
-    //             fee: POOL_FEE,
-    //             tickLower: -887220,
-    //             tickUpper: 887220,
-    //             amount0Desired: 100e6,
-    //             amount1Desired: 100e18,
-    //             amount0Min: 0,
-    //             amount1Min: 0,
-    //             recipient: fuzzLiquidityProvider,
-    //             deadline: block.timestamp + 1
-    //         })
-    //     );
+        // Create position
+        (uint256 actualTokenId,,,) = npm.mint(
+            INonfungiblePositionManager.MintParams({
+                token0: USDC,
+                token1: address(mockDugi),
+                fee: POOL_FEE,
+                tickLower: -887220,
+                tickUpper: 887220,
+                amount0Desired: 100e6,
+                amount1Desired: 100e18,
+                amount0Min: 0,
+                amount1Min: 0,
+                recipient: fuzzLiquidityProvider,
+                deadline: block.timestamp + 1
+            })
+        );
 
-    //     // Lock creation
-    //     IERC20(USDC).approve(address(liquidityFactory), fuzzFeeAmount);
-    //     npm.approve(address(liquidityFactory), actualTokenId);
+        // Lock creation
+        IERC20(USDC).approve(address(liquidityFactory), fuzzFeeAmount);
+        npm.approve(address(liquidityFactory), actualTokenId);
 
-    //     address lock = liquidityFactory.createLock(
-    //         POSITION_MANAGER,
-    //         LiquidityLockFactory.LockType.BASIC,
-    //         actualTokenId,
-    //         0
-    //     );
+        address lock = liquidityFactory.createLock(
+            POSITION_MANAGER,
+            LiquidityLockFactory.LockType.BASIC,
+            actualTokenId,
+            0
+        );
 
-    //     // Verifications
-    //     LiquidityLockFactory.LockInfo[] memory userLocks = liquidityFactory.getUserLocks(fuzzLiquidityProvider);
-    //     assertEq(userLocks.length, 1);
-    //     assertEq(userLocks[0].lockAddress, lock);
-    //     assertEq(uint8(userLocks[0].lockType), uint8(LiquidityLockFactory.LockType.BASIC));
-    //     assertEq(npm.ownerOf(actualTokenId), lock);
-    //     assertEq(ILiquidity(lock).getOwner(), fuzzLiquidityProvider);
+        // Verifications
+        LiquidityLockFactory.LockInfo[] memory userLocks = liquidityFactory.getUserLocks(fuzzLiquidityProvider);
+        assertEq(userLocks.length, 1);
+        assertEq(userLocks[0].lockAddress, lock);
+        assertEq(uint8(userLocks[0].lockType), uint8(LiquidityLockFactory.LockType.BASIC));
+        assertEq(npm.ownerOf(actualTokenId), lock);
+        assertEq(ILiquidity(lock).getOwner(), fuzzLiquidityProvider);
 
-    //     vm.stopPrank();
-    // }
+        vm.stopPrank();
+    }
 
-    // function testCreateNormalLockFuzz(
-    //     address fuzzLiquidityProvider,
-    //     uint256 fuzzTokenId,
-    //     uint256 fuzzFeeAmount,
-    //     uint256 fuzzUnlockTime
-    // ) public {
-    //     // Bound and validate inputs
-    //     vm.assume(fuzzLiquidityProvider != address(0));
-    //     vm.assume(fuzzLiquidityProvider.code.length == 0);
-    //     vm.assume(fuzzLiquidityProvider != liquidityFactory.feeCollector());
-    //     vm.assume(fuzzLiquidityProvider != USDC_WHALE);
+    function testCreateNormalLockFuzz(
+        address fuzzLiquidityProvider,
+        uint256 fuzzTokenId,
+        uint256 fuzzFeeAmount,
+        uint256 fuzzUnlockTime
+    ) public {
+        // Bound and validate inputs
+        vm.assume(fuzzLiquidityProvider != address(0));
+        vm.assume(fuzzLiquidityProvider.code.length == 0);
+        vm.assume(fuzzLiquidityProvider != liquidityFactory.feeCollector());
+        vm.assume(fuzzLiquidityProvider != USDC_WHALE);
 
-    //     fuzzTokenId = bound(fuzzTokenId, 1, 1_000_000);
-    //     fuzzFeeAmount = bound(fuzzFeeAmount, liquidityFactory.liquidityLockFeeAmountNormal(), 1_000_000e6);
-    //     fuzzUnlockTime = bound(fuzzUnlockTime, block.timestamp + 1 days, block.timestamp + 365 days);
+        fuzzTokenId = bound(fuzzTokenId, 1, 1_000_000);
+        fuzzFeeAmount = bound(fuzzFeeAmount, liquidityFactory.liquidityLockFeeAmountNormal(), 1_000_000e6);
+        fuzzUnlockTime = bound(fuzzUnlockTime, block.timestamp + 1 days, block.timestamp + 365 days);
 
-    //     // Fund provider
-    //     vm.startPrank(USDC_WHALE);
-    //     IERC20(USDC).transfer(fuzzLiquidityProvider, 10_000e6);
-    //     vm.stopPrank();
+        // Fund provider
+        vm.startPrank(USDC_WHALE);
+        IERC20(USDC).transfer(fuzzLiquidityProvider, 10_000e6);
+        vm.stopPrank();
 
-    //     mockDugi.mint(fuzzLiquidityProvider, 10_000e18);
+        mockDugi.mint(fuzzLiquidityProvider, 10_000e18);
 
-    //     vm.startPrank(fuzzLiquidityProvider);
+        vm.startPrank(fuzzLiquidityProvider);
 
-    //     // Create UniV3 position
-    //     IERC20(USDC).approve(POSITION_MANAGER, type(uint256).max);
-    //     mockDugi.approve(POSITION_MANAGER, type(uint256).max);
+        // Create UniV3 position
+        IERC20(USDC).approve(POSITION_MANAGER, type(uint256).max);
+        mockDugi.approve(POSITION_MANAGER, type(uint256).max);
 
-    //     (uint256 actualTokenId,,,) = npm.mint(
-    //         INonfungiblePositionManager.MintParams({
-    //             token0: USDC,
-    //             token1: address(mockDugi),
-    //             fee: POOL_FEE,
-    //             tickLower: -887220,
-    //             tickUpper: 887220,
-    //             amount0Desired: 100e6,
-    //             amount1Desired: 100e18,
-    //             amount0Min: 0,
-    //             amount1Min: 0,
-    //             recipient: fuzzLiquidityProvider,
-    //             deadline: block.timestamp + 1
-    //         })
-    //     );
+        (uint256 actualTokenId,,,) = npm.mint(
+            INonfungiblePositionManager.MintParams({
+                token0: USDC,
+                token1: address(mockDugi),
+                fee: POOL_FEE,
+                tickLower: -887220,
+                tickUpper: 887220,
+                amount0Desired: 100e6,
+                amount1Desired: 100e18,
+                amount0Min: 0,
+                amount1Min: 0,
+                recipient: fuzzLiquidityProvider,
+                deadline: block.timestamp + 1
+            })
+        );
 
-    //     // Lock creation with proper approvals
-    //     IERC20(USDC).approve(address(liquidityFactory), liquidityFactory.liquidityLockFeeAmountNormal());
-    //     npm.approve(address(liquidityFactory), actualTokenId);
+        // Lock creation with proper approvals
+        IERC20(USDC).approve(address(liquidityFactory), liquidityFactory.liquidityLockFeeAmountNormal());
+        npm.approve(address(liquidityFactory), actualTokenId);
 
-    //     address lock = liquidityFactory.createLock(
-    //         POSITION_MANAGER,
-    //         LiquidityLockFactory.LockType.NORMAL,
-    //         actualTokenId,
-    //         fuzzUnlockTime
-    //     );
+        address lock = liquidityFactory.createLock(
+            POSITION_MANAGER,
+            LiquidityLockFactory.LockType.NORMAL,
+            actualTokenId,
+            fuzzUnlockTime
+        );
 
-    //     // Verify lock state
-    //     LiquidityLockFactory.LockInfo[] memory userLocks = liquidityFactory.getUserLocks(fuzzLiquidityProvider);
-    //     assertEq(userLocks.length, 1);
-    //     assertEq(userLocks[0].lockAddress, lock);
-    //     assertEq(uint8(userLocks[0].lockType), uint8(LiquidityLockFactory.LockType.NORMAL));
-    //     assertEq(npm.ownerOf(actualTokenId), lock);
-    //     assertEq(ILiquidity(lock).getOwner(), fuzzLiquidityProvider);
-    //     assertEq(ILiquidity(lock).getUnlockTime(), fuzzUnlockTime);
+        // Verify lock state
+        LiquidityLockFactory.LockInfo[] memory userLocks = liquidityFactory.getUserLocks(fuzzLiquidityProvider);
+        assertEq(userLocks.length, 1);
+        assertEq(userLocks[0].lockAddress, lock);
+        assertEq(uint8(userLocks[0].lockType), uint8(LiquidityLockFactory.LockType.NORMAL));
+        assertEq(npm.ownerOf(actualTokenId), lock);
+        assertEq(ILiquidity(lock).getOwner(), fuzzLiquidityProvider);
+        assertEq(ILiquidity(lock).getUnlockTime(), fuzzUnlockTime);
 
-    //     vm.stopPrank();
-    // }
+        vm.stopPrank();
+    }
 }
