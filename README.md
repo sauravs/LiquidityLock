@@ -1,7 +1,7 @@
 # NFT Liquidity Lock Platform
 
 ## Overview
-A decentralized platform for locking NFT liquidity with customizable time-based restrictions. The platform allows users to lock their NFTs in smart contracts with two different locking mechanisms: Basic (immediate withdrawal) and Normal (time-locked).
+A decentralized platform for locking NFT liquidity (for UNISWAP V3 and SUSHISWAP) with customizable time-based restrictions. The platform allows users to lock their NFTs in smart contracts with two different locking mechanisms: Basic (immediate withdrawal) and Normal (time-locked).
 
 ## Key Features
 - Two types of liquidity locks:
