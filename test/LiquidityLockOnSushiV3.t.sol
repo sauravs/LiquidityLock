@@ -17,7 +17,7 @@ contract MockDugi is ERC20 {
     }
 }
 
-contract LiquidityLockForUniV3Test is Test {
+contract LiquidityLockTestForSushi is Test {
     LiquidityLockFactory public liquidityFactory;
     MockDugi public mockDugi;
     ERC20 usdc;
@@ -26,11 +26,11 @@ contract LiquidityLockForUniV3Test is Test {
 
     uint256 polygonMainnetFork;
 
-    // polygon mainnet addresses (related to uniV3)
+    // polygon mainnet addresses(related to SUSHI)
     address constant USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
     address constant USDC_WHALE = 0x94dBF04E273d87e6D9Bed68c616F43Bf86560C74;
-    address constant UNISWAP_V3_FACTORY = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
-    address constant POSITION_MANAGER = 0xC36442b4a4522E871399CD717aBDD847Ab11FE88;
+    address constant SUSHISWAP_V3_FACTORY = 0x917933899c6a5F8E37F31E19f92CdBFF7e8FF0e2;
+    address constant POSITION_MANAGER = 0xb7402ee99F0A008e461098AC3A27F4957Df89a40;
 
     uint24 constant POOL_FEE = 3000;
     uint256 constant INITIAL_DUGI_MINT = 1000000 * 1e18;
@@ -52,7 +52,7 @@ contract LiquidityLockForUniV3Test is Test {
         // Initialize contracts
         liquidityFactory = new LiquidityLockFactory();
         npm = INonfungiblePositionManager(POSITION_MANAGER);
-        uniFactory = IUniswapV3Factory(UNISWAP_V3_FACTORY);
+        uniFactory = IUniswapV3Factory(SUSHISWAP_V3_FACTORY);
         mockDugi = new MockDugi("mockDugiCoin", "mockDugi");
 
         // use real USDC contract

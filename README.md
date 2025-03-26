@@ -56,7 +56,7 @@ To create a lock:
 - Address validation checks
 - Protected initializers
 - Admin-controlled fee parameters
-- 100% test coverage
+- 100% functional test coverage
 - Fuzz runs verfied for important functions for 256 runs
 
 

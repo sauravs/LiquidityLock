@@ -18,7 +18,6 @@ contract BasicLiquidity is BaseLiquidity {
     function withdraw(address nftContract, uint256 _tokenId) external override onlyOwner {
         if (nftContract == address(0)) revert NotValidAddress();
 
-
         if (_tokenId != this.getTokenId()) {
             revert InvalidTokenId();
         }

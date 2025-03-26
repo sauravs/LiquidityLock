@@ -34,13 +34,25 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
     /// @notice Thrown when address is invalid
     error NotValidAddress();
 
+    /// @notice Emitted when a new lock is initialized
+    /// @param owner The address that owns the lock
+    /// @param tokenId The ID of the locked NFT
+    /// @param unlockTime The timestamp when the NFT becomes unlockable
+    /// @param startTime The timestamp when the lock was created
+    event LockInitialized(address indexed owner, uint256 indexed tokenId, uint256 unlockTime, uint256 startTime);
+
     /// @notice Modifier to restrict access to the owner
+    /// @dev Reverts if caller is not the owner
     modifier onlyOwner() {
         if (msg.sender != owner) revert NotOwner();
         _;
     }
 
     /// @notice Initializes the lock contract
+    /// @param _owner The address that will own this lock
+    /// @param _tokenId The ID of the NFT being locked
+    /// @param _unlockTime The timestamp when the NFT becomes unlockable
+    /// @dev Should only be callable once during contract setup
     function initialize(address _owner, uint256 _tokenId, uint256 _unlockTime) external virtual {
         if (initialized) revert AlreadyInitialized();
         if (_owner == address(0)) revert NotValidAddress();
@@ -49,24 +61,30 @@ abstract contract BaseLiquidity is ILiquidity, ERC721Holder {
         unlockTime = _unlockTime;
         startTime = block.timestamp;
         initialized = true;
+
+        emit LockInitialized(_owner, _tokenId, _unlockTime, startTime);
     }
 
     /// @notice Returns the owner of the locked NFT
+    /// @return The address of the lock owner
     function getOwner() external view returns (address) {
         return owner;
     }
 
     /// @notice Returns the ID of the locked NFT
+    /// @return The token ID of the locked NFT
     function getTokenId() external view returns (uint256) {
         return tokenId;
     }
-
     /// @notice Returns the unlock time of the locked NFT
+    /// @return The timestamp when the NFT becomes unlockable
+
     function getUnlockTime() external view returns (uint256) {
         return unlockTime;
     }
 
     /// @notice Returns the start time of the locked NFT
+    /// @return The timestamp when the NFT was locked
     function getStartTime() external view returns (uint256) {
         return startTime;
     }
